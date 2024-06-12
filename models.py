@@ -2,7 +2,7 @@ import streamlit as st
 import pickle
 import pandas as pd
 
-background_image_url = "https://c4.wallpaperflare.com/wallpaper/910/11/748/background-fruit-vegetables-cuts-hd-wallpaper-preview.jpg"
+background_image_url = "https://t3.ftcdn.net/jpg/02/05/56/54/360_F_205565499_waqtbwXp6KukIa7ilco7GfIErIjIK117.jpg"
 
 #Custom CSS
 background_css = f"""
@@ -38,7 +38,7 @@ with open(model_path_mild, 'rb') as file:
 
 # Load the Market Prediction model
 def load_market_model():
-    with open('mlr.pkl', 'rb') as file:
+    with open('mlr_1.pkl', 'rb') as file:
         model = pickle.load(file)
     return model
 
@@ -163,7 +163,7 @@ def main():
             Weight_Kg_brown = st.number_input("Weight Per Kilograms", min_value=0.0)
             Low_Price_brown = st.number_input("Low Price(R)", min_value=0)
         with col2:    
-            Sales_Total_brown = st.number_input('Total Sale', min_value=0)
+            Sales_Total_brown = st.number_input('Total Sales(R)', min_value=0)
             Stock_On_Hand_brown = st.number_input('Stock On Hand', step=1)
             month_brown = st.slider("Month", 1, 12)
             day_brown = st.slider("Day", 1, 31)
@@ -187,7 +187,7 @@ def main():
         with col2:
             Total_Kg_Sold_mild = st.number_input('Total Kilograms Sold', min_value=0)
             High_Price_mild = st.number_input("High Price(R)", min_value=0)
-            Sales_Total_mild = st.number_input('Total Sale', min_value=0)
+            Sales_Total_mild = st.number_input('Total SaleS(R)', min_value=0)
             Stock_On_Hand_mild = st.number_input('Stock On Hand', step=1)
             month_mild = st.slider("Month", 1, 12)
 
@@ -210,8 +210,8 @@ def main():
             Low_Price_potato = st.number_input("Low Price(R)", min_value=0)
         with col2:
             High_Price_potato = st.number_input("High Price(R)", min_value=0)
-            Total_Kg_Sold_potato = st.number_input('Total Kilograms Sold', min_value=0)
-            Sales_Total_potato = st.number_input('Total Sale', min_value=0)
+            Total_Kg_Sold_potato = st.number_input('Total Kilograms Sold(R)', min_value=0)
+            Sales_Total_potato = st.number_input('Total Sales(R)', min_value=0)
             Stock_On_Hand_potato = st.number_input('Stock On Hand', step=1)
 
         # Button to predict Potato Washed Mondial price
@@ -224,23 +224,28 @@ def main():
         model = load_market_model()
         
 
-        features = ['Weight_Kg', 'High_Price','month', 'Province_encoded', 'Container_encoded','Size_Grade_encoded']
-    
-        province = ["CAPE","GAUTENG","KWAZULU NATAL","MPUMALANGA","NATAL","NORTH EASTERN CAPE","TRANSVAAL"]
-        container = ["AD040","AJ100","AP010","BB020","BD100","BJ090","BM050","BS060","BT070","KR200","NP005","TS035"]
-        sizegrade = ["1L", "1M","1R","1S","1U","1X","1Z","2L","2M","2R","2S","2X","2Z","3L","3M","3R","3S","3X","3Z","4M","4R","4S"]
-    
+        features = ['Weight in Kg', 'Low Price in Rands', 'High Price in Rands', 'Province', 'Container','Size Grade', 'Month']
+        #features = ['Weight_Kg', 'Low_Price', 'High_Price','Month_encoded', 'Province_encoded', 'Container_encoded','Size_Grade_encoded']
+        
+        month = ["April","August","February","December","January","July","June","March","May","October","September"]
+        province = ["NATAL","NORTH EASTERN CAPE","TRANSVAAL"]
+        container = ["BM050","BS060","BT070"]
+        sizegrade = ["1L", "1M","1R","1S","1U","1X","1Z","2L","2M","2R","2S","2X","2Z","3M","3R","3S","3Z"]
+        
         user_inputs = {}
         for feature in features:
-            if feature == "Province_encoded" or feature == "Container_encoded" or feature == "Size_Grade_encoded":
-                if feature == "Province_encoded":
+            if feature == "Province" or feature == "Container" or feature == "Month":
+                if feature == "Province":
                     ss = province
-                elif feature == "Container_encoded":
+                elif feature == "Container":
                     ss = container
-                elif feature == "Size_Grade_encoded":
+                elif feature == "Size Grade":
                     ss = sizegrade
-    
+                elif feature == "Month":
+                    ss = month
+        
                 display = (ss)
+
 
                 options = list(range(len(display)))
 
@@ -266,7 +271,7 @@ def main():
                 prediction = model.predict(user_inputs_df)
                 st.write(f'Predicted Average Price of Tomato Long Life: R{prediction[0]:.2f}')
             except Exception as e:
-                st.write("Error occurred during prediction:", e)      
+                st.write("Error occurred during prediction:", e)   
 
     elif selected_model == "Potato SIFRA (WASHED)":
         # Display input fields for Potato SIFRA (WASHED)
@@ -280,7 +285,7 @@ def main():
             Weight_Kg_sifra = st.number_input("Weight Per Kilogram", min_value=0.0)
             Low_Price_sifra = st.number_input("Low Price(R)", min_value=0)
         with col2:
-            Sales_Total_sifra = st.number_input('Total Sales', min_value=0)
+            Sales_Total_sifra = st.number_input('Total Sales(r)', min_value=0)
             Stock_On_Hand_sifra = st.number_input('Stock On Hand', step=1)
             month_sifra = st.slider("Month", 1, 12)
             day_sifra = st.slider("Day", 1, 31)
